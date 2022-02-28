@@ -1,0 +1,65 @@
+#!/bin/bash
+echo '
+
+            .___  .___                        ________  
+_____     __| _/__| _/_ __  ______ ___________\_____  \ 
+\__  \   / __ |/ __ |  |  \/  ___// __ \_  __ \/  ____/ 
+ / __ \_/ /_/ / /_/ |  |  /\___ \\  ___/|  | \/       \ 
+(____  /\____ \____ |____//____  >\___  >__|  \_______ \
+     \/      \/    \/          \/     \/              \/
+
+'
+echo "          ______________________________"
+echo "          |                            |"
+echo "          |                            |"
+echo "          |     script written by:     |"
+echo "          |          Michalkap         |"
+echo "          |                            |"
+echo "          =============================="
+echo "          |                            |"
+echo "          |                            |"
+echo "          |Allows you to add linux sudo|"
+echo "          |ssh user to any disk.       |"
+echo "          |                            |"
+echo "          |____________________________|"
+echo
+echo
+echo
+echo
+read -n 1 -s -r -p "Press any key to continue"
+clear
+while true
+do
+  lsblk
+  read -p "Specify disk: " diskvar
+  read -p "Is "$diskvar" disk what you want to use? <y/N> " prompt
+  if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
+  then
+    clear
+    break
+  else
+    clear
+  fi
+done
+read -p "Specify username: " usernamevar
+clear
+sudo mkdir /mnt/$diskvar
+sudo mount /dev/$diskvar /mnt/$diskvar
+sudo mkdir /mnt/$diskvar/home/$usernamevar
+sudo apt install whois -y
+clear
+password=$(mkpasswd -m sha-512)
+clear
+toshadow=$usernamevar':'$password':19050:0:99999:7:::'
+sudo echo $usernamevar':x:1002:1002:,,,:/home/taju:/bin/bash' >> /mnt/$diskvar/etc/passwd
+sudo echo $toshadow >> /mnt/$diskvar/etc/shadow
+sudo echo $usernamevar':x:1001:' >> /mnt/$diskvar/etc/group
+sudo mkdir /mnt/$diskvar/home/$usernamevar/.ssh
+sudo chown $usernamevar /mnt/$diskvar/home/$usernamevar
+sudo echo $usernamevar'  ALL=(ALL:ALL) ALL' >> /mnt/$diskvar/etc/sudoers
+sudo echo 'Port 1234
+PermitRootLogin yes
+AllowUsers '$usernamevar >> /mnt/$diskvar/etc/ssh/sshd_config
+chroot /mnt/$diskvar/ sudo chown $usernamevar /home/$usernamevar/
+chroot /mnt/$diskvar/ sudo apt install openssh-server -y
+clear
