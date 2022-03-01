@@ -13,7 +13,7 @@ echo "          ______________________________"
 echo "          |                            |"
 echo "          |                            |"
 echo "          |     script written by:     |"
-echo "          |          Michalkap         |"
+echo "          |    Michalkap Developer     |"
 echo "          |                            |"
 echo "          =============================="
 echo "          |                            |"
@@ -26,7 +26,7 @@ echo
 echo
 echo
 echo
-read -n 1 -s -r -p "Press any key to continue"
+read -n 1 -s -r -p "Press any key to continue(Or [Ctrl+C] to exit)"
 clear
 while true
 do
